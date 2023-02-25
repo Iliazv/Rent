@@ -1,0 +1,239 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;300;400;500&family=Noto+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <script type="text/javascript" src="{% static 'estate/show_phone.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/slider.js' %}" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/notification.js"></script>
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="annoucement">
+                <div class="container">
+                    <div class="annoucement__date">
+                        {{ annoucement.date|date:"Y-m-d H:m:s" }}
+                    </div>
+                    <div class="annoucement__panel">
+                        <div class="annoucement__gallery">
+                            <div class="annoucement__title">
+                                {{ annoucement.title }}
+                            </div>
+                            <div class="annoucement__address">
+                                {{ annoucement.address }}
+                            </div>
+                            <div class="annoucement__bar">
+                                <div class="annoucement__favorite">
+                                    <form action="{% url 'add_favorite' arg=annoucement.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button id="slider__show"><img src="{% static '../static/estate/images/heart_icon.png' %}" alt="" class="annoucement__pic annoucement__pic_1"></button>
+                                    </form>
+                                    
+                                </div>
+                                <div class="annoucement__report">
+                                    <form action="{% url 'open_chat' arg=annoucement.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button><img src="{% static '../static/estate/images/message_icon.png' %}" alt="" class="annoucement__pic annoucement__pic_1"></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="annoucement__images">
+                                <div class="annoucement__big" id="big">
+                                    {% if annoucement.main_image %}
+                                        <img src="{{ annoucement.main_image.url }}" alt="" class="annoucement__main_image" id="imageBox">
+                                    {% else %}
+                                        <div class="image2">
+                                            <img src="{% static '../static/estate/images/not_found.png' %}" alt="" class="photo__not-found">
+                                        </div>
+                                    {% endif %}
+                                    
+                                </div>
+                                <div class="annoucement__small" id="sub">
+                                    {% for picture in annoucement.pictures.all %}
+                                        <img src="{{ picture.image.url }}" alt="" class="small__slide" onclick="myFunction(this)">
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="annoucement__information">
+                                <div class="annoucement__area">
+                                    <span class="annoucement__highlight">{{ annoucement.area }} м<sup>2</sup></span> <div class="annoucement__label_area">Площадь</div>
+                                </div>
+                                {% if annoucement.category == 'Дом' %}
+                                    <div class="annoucement__ceil">
+                                        <span class="annoucement__highlight">{{ annoucement.ceilings }}</span> 
+                                        <div class="annoucement__label_ceil">Этажей</div>
+                                    </div>
+                                {% else %}
+                                    <div class="annoucement__ceil">
+                                        <span class="annoucement__highlight">{{ annoucement.ceil }} из {{ annoucement.ceilings }}</span> 
+                                        <div class="annoucement__label_ceil">Этаж</div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="annoucement__divider"></div>
+                            <div class="annoucement__description">
+                                {{ annoucement.description }}
+                            </div>
+                            <div class="annoucement__divider_2"></div>
+                            <div class="annoucement__phone">
+                                <div class="annoucement__warning">Более подробную информацию вы можете узнать у владельца</div>
+                                <div class="slider__hidden_phone" id="slider__phone">+ {{annoucement.phone}}</div>
+                                <button class="slider__phone extra" id="slider__show_extra" onclick="ShowSmallPhone()">Телефон</button>
+                            </div>
+                            <div class="annoucement__divider_2"></div>
+                            <div class="annoucement__general">
+                                <div class="annoucement__points"><span class="annoucement__main_label">Общая информация:</span>
+                                    <div class="annoucement__sign">
+                                        <img src="{% static '../static/estate/images/shower.png' %}" alt="" class="annoucement__icon"> Ванна
+                                    </div>
+                                    <div class="annoucement__sign">
+                                        <img src="{% static '../static/estate/images/furniture.png' %}" alt="" class="annoucement__icon annoucement__icon_other"> Мебель
+                                    </div>
+                                    <div class="annoucement__sign">
+                                        <img src="{% static '../static/estate/images/wifi.png' %}" alt="" class="annoucement__icon"> Wifi
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="annoucement__divider_2"></div>
+                            <div class="annoucement__building">
+                                <span class="annoucement__main_label annoucement__main_building">О постройке:</span>
+                                <div class="annoucement__box">
+                                    <div class="annoucement__name">
+                                        <div class="name">Год постройки</div>
+                                        <div class="name">Тип дома</div>
+                                        <div class="name">Отопление</div>
+                                        <div class="name">Мусоропровод</div>
+                                    </div>
+                                    <div class="annoucement__value">
+                                        <div class="value">{{ annoucement.building_year }}</div>
+                                        <div class="value">{{ annoucement.type }}</div>
+                                        <div class="value">{{ annoucement.heating }}</div>
+                                        <div class="value">
+                                            {% if annoucement.ceilings > 9 %}
+                                                Есть
+                                            {% else %}
+                                                Нет
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="annoucement__divider_2"></div>
+                            <div class="annoucement__phone">
+                                <div class="annoucement__warning">Добавьте данное объявление в список избранных</div>
+                                <div class="slider__hidden_phone" id="slider__phone">+ {{annoucement.phone}}</div>
+                                <form action="{% url 'add_favorite' arg=annoucement.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="slider__add" id="slider__show" onclick="ShowPhone()">В избранное</button>
+                                </form>
+                            </div>
+                            
+                        </div>  
+                        <div class="annoucement__contact">
+                            <div class="annoucement__profit">Выгодно</div>
+                            <div class="annoucement__price">{{ annoucement.price }} руб./мес.</div>
+                            <div class="annoucement__other">Прочие платежи не включены</div>
+                            <div class="annoucement__conditions">Предоплата взымается за полный месяц</div>
+                            <div class="slider__hidden_big-phone" id="slider__big_phone">+ {{annoucement.phone}}</div>
+                                <button class="slider__big-phone" id="slider__big_show" onclick="ShowBigPhone()">Телефон</button>
+                            <form action="{% url 'open_chat' arg=annoucement.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="slider__big-chat">Написать</button>
+                            </form>
+                            <div class="annoucement__divider_2"></div>
+                            <div class="annoucement__creator">
+                                <div class="annoucement__profile">
+                                    <div class="annoucement__nickname">
+                                        {% if creator.username|length == 1 or creator.username|length == 0 %}
+                                            User
+                                        {% else %}
+                                            {{ creator.username }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="announcement__estator">
+                                        {% if creator.email == 'vitae@bk.ru' %}
+                                            <img src="{% static '../static/estate/images/admin.png' %}" alt="" class="annoucement__thumb"> <span class="announcement__admin">Администратор</span>
+                                        {% else %}
+                                            <img src="{% static '../static/estate/images/estator.png' %}" alt="" class="annoucement__thumb"> <span class="announcement__admin">Арендодатель</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="announcement__verification">
+                                        <img src="{% static '../static/estate/images/check.png' %}" alt="" class="annoucement__thumb"> <span class="announcement__registered">Данный профиль верифицирован</span>
+                                    </div>
+                                    <div class="announcement__auth-date">
+                                        {{ creator.date_joined }}
+                                    </div>
+                                </div>
+                                <div class="announcement__picture">
+                                    <img src="{% static '../static/estate/images/man.png' %}" alt="" class="annoucement__man">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="container">
+                    <div class="footer__section">
+                        <div class="footer__logo">
+                            <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                            <span class="copyright">@ Объявление.ру</span>
+                        </div>
+                        <div class="footer__links">
+                            <a href="{% url 'contacts' %}" class="footer__href">Контакты</a>
+                            <a href="{% url 'about' %}" class="footer__href">О нас</a>
+                        </div>
+                        <div class="footer__networks">
+                            <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

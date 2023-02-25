@@ -1,0 +1,279 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <script type="text/javascript" src="{% static 'estate/show_phone.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/show_adder.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/popup.js' %}" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/notification.js"></script>
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view">
+                <div class="container">
+                    <div class="view__title">
+                        Избранное{{chosen_compilation.saved_favorites}}
+                    </div>
+                    <div class="view__page">
+                        <div class="view__favorite">
+                            <div class="view__head">
+                                Список подборок
+                            </div>
+                            <div class="view__set">
+                            <div class="view__compilation">
+                                <button class="view__button" data-modal-target="#modal">
+                                    <img src="{% static '../static/estate/images/add.png' %}" alt="" class="view__add">
+                                    Добавить
+                                </button>
+                            </div>
+                            <div class="modal" id="modal">
+                                <div class="modal-header">
+                                    <div class="title">Создание новой подборки</div>
+                                    <button data-close-button class="close-button">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'add_compilation' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="modal-block">
+                                            <input type="text" maxlength="12" class="modal-field" name="title" placeholder="Название">
+                                        </div>
+                                        <div class="modal-block">
+                                            <button data-modal-target="#modal" class="welcome__button">Создать</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="overlay"></div>
+                            <div class="view__loop">
+                                {% for compilation in compilations %}
+                                <div class="view__compilation">
+                                    <form action="{% url 'show_compilation' arg=compilation.id %}" method="POST">
+                                        {% csrf_token %}
+                                            <button class="view__button">
+                                                {{compilation}}
+                                            </button>
+
+                                    </form>
+                                    <div class="view__delete">
+                                        <form action="{% url 'remove_compilation' arg=compilation.id %}" action="POST">
+                                            {% csrf_token %}
+                                            <button class="view__delete-btn"><img src="{% static '../static/estate/images/cross.png' %}" alt="" class="view__cross"></button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                        <div class="view__items">
+                            {% if not request.user.is_authenticated %}
+                            <div class="view__empty">
+                                Список избранных объявлений пуст. <a href="{% url 'login' %}" class="view__login">Войдите</a> чтобы добавить
+                            </div>
+                            {% elif favorites|length == 0 %}
+                            <div class="view__empty">
+                                Список избранных объявлений пуст. Добавляйте объявления которые понравились сюда
+                            </div>
+                            {% elif chosen_compilation %}
+                            Список объявлений в подборке {{ chosen_compilation }}: <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/back3.png' %}" alt="" class="header__back"></a>
+                            {% for favorite in chosen_elements %}
+                            <div class="slider__list">
+                                <a href="{% url 'annoucement_item' arg=favorite.id %}">
+                                <div class="slider__item">
+                                    <div class="slider__block">
+                                        <div class="slider__photo_favorite">
+                                            <div class="image_favorite">
+                                                <img src="{{ favorite.main_image.url }}" alt="" class="photo__image_favorite">
+                                            </div>
+                                            <div class="slider__small_favorite">
+                                                {% for picture in favorite.pictures.all|slice:"1:4" %}
+                                                    <img src="{{ picture.image.url }}" alt="" class="small__image_favorite">
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="slider__information_favorite">
+                                            <div class="slider__separate_favorite">
+                                                <div class="slider__label">
+                                                    {{ favorite.title }} 
+                                                </div>
+                                                <div class="slider__date">
+                                                    {{ favorite.get_date }}
+                                                </div>
+                                            </div>
+                                            <div class="slider__location_favorite slider__display_1">
+                                                {{ favorite.address }}
+                                            </div>
+                                            <div class="slider__location_favorite slider__secret_1">
+                                                {{ favorite.slice_address }}
+                                            </div>
+                                            <div class="slider__price_favorite">
+                                                {{ favorite.price }} руб./мес.
+                                            </div>
+                                            <div class="slider__description_favorite slider__display_favorite">
+                                                {{ favorite.description }}
+                                            </div>
+                                            <div class="slider__description_favorite slider__secret_favorite">
+                                                {{ favorite.slice_description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slider__description slider__bottom">
+                                        {{ favorite.slice_description }}
+                                    </div>
+                                    <div class="slider__check">
+                                        
+                                        <div class="slider__area" onclick="return false">
+                                            <div class="slider__hidden_phone" id="slider__phone_{{ favorite }}">+ {{ favorite.phone }}</div>
+                                            <embed>
+                                                <button class="slider__phone" id="slider__show_{{ favorite }}" onclick='ShowPhone("{{ favorite }}")'>Телефон</button>
+                                            </embed>
+                                        </div>
+                                        <div class="slider__area">
+                                            <form action="{% url 'open_chat' arg=favorite.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button class="slider__chat">Написать</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div></a>
+                            {% endfor %}
+                            {% else %}
+                            Список избранных объявлений:
+                            {% for favorite in favorites %}
+                            <div class="slider__list">
+                                <a href="{% url 'annoucement_item' arg=favorite.annoucement.id %}">
+                                <div class="slider__item">
+                                    <div class="slider__block">
+                                        <div class="slider__photo_favorite">
+                                            <div class="image_favorite">
+                                                <img src="{{ favorite.annoucement.main_image.url }}" alt="" class="photo__image_favorite">
+                                            </div>
+                                            <div class="slider__small_favorite">
+                                                {% for picture in favorite.annoucement.pictures.all|slice:"1:4" %}
+                                                    <img src="{{ picture.image.url }}" alt="" class="small__image_favorite">
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="slider__information_favorite">
+                                            <div class="slider__separate_favorite">
+                                                <div class="slider__label">
+                                                    {{ favorite.annoucement.title }} 
+                                                </div>
+                                                <div class="slider__date">
+                                                    {{ favorite.annoucement.get_date }}
+                                                </div>
+                                            </div>
+                                            <div class="slider__location_favorite slider__display_1">
+                                                {{ favorite.annoucement.address }}
+                                            </div>
+                                            <div class="slider__location_favorite slider__secret_1">
+                                                {{ favorite.annoucement.slice_address }}
+                                            </div>
+                                            <div class="slider__price_favorite">
+                                                {{ favorite.annoucement.price }} руб./мес.
+                                            </div>
+                                            <div class="slider__description_favorite slider__display_favorite">
+                                                {{ favorite.annoucement.description }}
+                                            </div>
+                                            <div class="slider__description_favorite slider__secret_favorite">
+                                                {{ favorite.annoucement.slice_description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slider__description slider__bottom">
+                                        {{ favorite.annoucement.slice_description }}
+                                    </div>
+                                    <div class="slider__check">
+                                        <div class="slider__hidden">
+                                            <form action="{% url 'remove_favorite' arg=favorite.id %}" action="POST">
+                                                <embed>
+                                                <button type="submit"><img src="{% static '../static/estate/images/remove2.png' %}" alt="" class="view__like" onmouseover="Show_adder()"></button>
+                                                </embed>
+                                            </form>
+                                        </div>
+                                        
+                                        <div class="slider__area" onclick="return false">
+                                            <div class="slider__hidden_phone" id="slider__phone_{{ favorite }}">+ {{ favorite.annoucement.phone }}</div>
+                                            <embed>
+                                                <button class="slider__phone" id="slider__show_{{ favorite }}" onclick='ShowPhone("{{ favorite }}")'>Телефон</button>
+                                            </embed>
+                                        </div>
+                                        <div class="slider__area">
+                                            <form action="{% url 'open_chat' arg=favorite.annoucement.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button class="slider__chat">Написать</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div></a>
+                        {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+            <div class="footer">
+                <div class="container">
+                    <div class="footer__section">
+                        <div class="footer__logo">
+                            <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                            <span class="copyright">@ Объявление.ру</span>
+                        </div>
+                        <div class="footer__links">
+                            <a href="{% url 'contacts' %}" class="footer__href">Контакты</a>
+                            <a href="{% url 'about' %}" class="footer__href">О нас</a>
+                        </div>
+                        <div class="footer__networks">
+                            <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

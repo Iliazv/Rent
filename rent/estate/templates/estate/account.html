@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}"  alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account">
+                <div class="container">
+                    <div class="account__block">
+                        <div class="account__info">
+                            <div class="account__head">
+                                <div class="account__flex">
+                                    <div class="div"><img src="{% static '../static/estate/images/user2.png' %}" alt="" class="account__avatar"></div>
+                                    <div class="account__caption">Личный кабинет</div>
+                                </div>
+                            </div>
+                            <div class="account__body">
+                                <form action="{% url 'change_data' %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="account__name">
+                                        Имя
+                                    </div>
+                                    <input type="text" class="account__input" name="first_name">
+                                    <div class="account__name">
+                                        Фамилия
+                                    </div>
+                                    <input type="text"  class="account__input" name="last_name">
+                                    <div class="account__name">
+                                        Дата рождения
+                                    </div>
+                                    <input type="text"  class="account__input" name="date_birthday">
+                                    <div class="account__submit">
+                                        <button class="account__button">Сохранить</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="account__personal">
+                            <div class="account__FIO">
+                                <div class="account__label">Имя пользователя <img src="{% static '../static/estate/images/checkmark.png' %}" alt="" class="account__checkmark"></div>
+                                <div class="account__data">
+                                    {% if request.user.username|length == 1 or request.user.username|length == 0 %}
+                                        User
+                                    {% else %}
+                                        {{user.username}}
+                                    {% endif %}
+                                </div>
+                            </div> 
+                            <div class="account__email">
+                                <div class="account__label">Почтовый адрес <img src="{% static '../static/estate/images/checkmark.png' %}" alt="" class="account__checkmark"></div>
+                                <div class="account__data">{{user.email}}</div>
+                            </div> 
+                            <a href="{% url 'reset_password' %}">
+                            <div class="account__change">
+                                <div class="account__header">Сменить пароль</div>
+                                <div class="account__arrow"><img src="{% static '../static/estate/images/arrow4.png' %}" alt="" class="account__arrow"></div>
+                            </div>    
+                            </a>
+                            <a href="{% url 'logout_view' %}">
+                                <div class="account__change">
+                                    <div class="account__header">Выйти</div>
+                                    <div class="account__arrow"><img src="{% static '../static/estate/images/arrow4.png' %}" alt="" class="account__arrow"></div>
+                                </div>    
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="container">
+                <div class="footer__section">
+                    <div class="footer__logo">
+                        <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                        <span class="copyright">@ Объявление.ру</span>
+                    </div>
+                    <div class="footer__links">
+                        <a href="{% url 'contacts' %}" class="footer__href">Контакты</a>
+                        <a href="{% url 'about' %}" class="footer__href">О нас</a>
+                    </div>
+                    <div class="footer__networks">
+                        <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                        <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                        <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

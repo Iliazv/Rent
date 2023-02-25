@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;300;400;500&family=Noto+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <script type="text/javascript" src="{% static 'estate/show_phone.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/popup.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/dropdown.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'estate/filter.js' %}" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/notification.js"></script>
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat">
+                <div class="container__chat">
+                    <div class="chat__box">
+                        <div class="chat__contacts">
+                            <div class="chat__search">
+                                <input type="text" class="chat__field" placeholder="Поиск">
+                                <img src="{% static '../static/estate/images/search.png' %}" alt="" class="chat__svg">
+                            </div>
+                            <div class="chat__list">
+                                <div class="chat__user">
+                                    <div class="chat__avatar"></div>
+                                    <div class="chat__info">
+                                        <div class="chat__name">Ilia</div>
+                                        <div class="chat__message">Hello man))</div>
+                                    </div>
+                                    <div class="chat__date">20.20</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="chat__conversation">
+                            <div class="chat__interviewer">
+                                <div class="chat__avatar_small"></div>
+                                <div class="chat__info">
+                                    <div class="chat__name_small">Ilia <span class="chat__point">·</span><span class="chat__time"> 12:30</span></div>
+                                    <div class="chat__message_small"><div class="chat__online"></div> Онлайн</div>
+                                </div>
+                            </div>
+                            <div class="chat__picture_showed">
+                                <img src="{% static '../static/estate/images/chat_message.png' %}" alt="" class="chat__picture">
+                                <span class="chat__instruct">Выберите диалог с пользователем</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $('.building-link').click(function(){
+        var special_id = $(this).find('a').attr('id');
+        //$('#building-description').html($(this).data('description'));
+        //$('#building-img').src($(this).data('img'));
+    });
+</script>

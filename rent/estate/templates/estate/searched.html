@@ -1,0 +1,359 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;300;400;500&family=Noto+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+        <script type="text/javascript" src="{% static 'estate/show_phone.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'estate/popup.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'estate/dropdown.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'estate/filter.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'estate/notification.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'estate/ajax_handler.js' %}" defer></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+        <title>RentMove</title>
+    </head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter">
+                <div class="container">
+                    <div class="filter__line">
+                        <div class="filter__drop">
+                            <div class="filter__button">
+                                <div class="translate__language translate__language_1">
+                                    <form action="{% url 'searched' %}" method="post">
+                                    <div class="dropdown" data-dropdown>
+                                        <button type="button" class="filter__href" data-dropdown-button>Квартира</button>
+                                        <div class="dropdown-menu">
+                                            <script>
+                                                var data = document.getElementById('window').value
+                                            </script>
+                                            <div class="order__choices">
+                                                <input type="checkbox" name="category" id="category1" value="Квартира">
+                                                <label for="category1">Квартира</label>
+                                            </div>
+                                            <div class="order__choices">
+                                                <input type="checkbox" name="category" id="category2" value="Дом">
+                                                <label for="category2">Дом</label>
+                                            </div>   
+                                            <div class="order__choices">
+                                                <input type="checkbox" name="category" id="category3" value="Комната">
+                                                <label for="category3">Комната</label>
+                                            </div> 
+                                            <div class="order__choices">
+                                                <input type="checkbox" name="category" id="category4" value="Таунхаус">
+                                                <label for="category4">Таунхаус</label>
+                                            </div>
+                                            <div class="order__choices">
+                                                <input type="checkbox" name="category" id="category5" value="part">
+                                                <label for="category5">Часть дома</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__button">
+                                <div class="dropdown" data-dropdown>
+                                    <button type="button" class="filter__href" data-dropdown-button>Площадь</button>
+                                    <div class="dropdown-menu">
+                                        <script>
+                                            var data = document.getElementById('window').value
+                                        </script>
+                                        <div class="order__choices">
+                                            <input type="number" class="dropdown-input" name="square1" id="square1" placeholder="От">                               
+                                        </div>
+                                        <div class="order__choices">
+                                            <input type="number" class="dropdown-input" name="square2" id="square2" placeholder="До">
+                                            <div class="order__ruble_top">м<sup>2</sup></div>
+                                            <div class="order__ruble_bottom">м<sup>2</sup></div>
+                                        </div>   
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__button">
+                                <div class="dropdown" data-dropdown>
+                                    <button type="button" class="filter__href" data-dropdown-button>Цена</button>
+                                    <div class="dropdown-menu">
+                                        <script>
+                                            var data = document.getElementById('window').value
+                                        </script>
+                                        <div class="order__choices">
+                                            <input type="number" class="dropdown-input" name="price1" id="category1" placeholder="От">                                   
+                                        </div>
+                                        <div class="order__choices">
+                                            <input type="number" class="dropdown-input" name="price2" id="category2" placeholder="До">
+                                            <div class="order__ruble_top">₽</div>
+                                            <div class="order__ruble_bottom">₽</div>
+                                        </div>   
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__button">
+                                <button type="button" class="filter__href filter__display" id="modalBtn">Другие фильтры</button>
+                                <button type="button" class="filter__href filter__hidden" id="modalBtn1">Другое</button>
+                                <div id="simpleModal" class="popup">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <div class="title">Дополнительные фильтры</div>
+                                            <button type="button" data-close-button class="closeBtn">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                                {% csrf_token %}
+                                                <div class="modal-block">
+                                                    <div class="view__form">
+                                                        <div class="view__selecting">
+                                                            <div class="view__filter">Район</div>
+                                                            <div class="view__filter">Тип сделки</div>
+                                                            <div class="view__filter">Удобства</div>
+                                                            <div class="view__filter">Условия</div>
+                                                            <div class="view__filter">Этаж</div>
+                                                            <div class="view__filter">Год постройки</div>
+                                                            <div class="view__filter">Тип дома</div>
+                                                            <div class="view__filter">Мусоропровод</div>
+                                                        </div>
+                                                        
+                                                        <div class="view__field">
+                                                            <div class="special-div"><select name="district" class="view__box">
+                                                                <div class="drop-content">
+                                                                <option value="Любой">Все</option>
+                                                                <option value="Центральный">Центральный</option>
+                                                                <option value="Индустриальный">Индустриальный</option>
+                                                                <option value="Железнодорожный">Железнодорожный</option>
+                                                                <option value="Ленинский">Ленинский</option>
+                                                                <option value="Октябрьский">Октябрьский</option>
+                                                                </div>
+                                                            </select></div>
+                                                            <div class="div-check"><input type="checkbox" id="owner" name="owner" class="view__check" value="from_owner">
+                                                                <label for="owner" class="view__label">От собственника</label></div>
+                                                            <div class=""><div class="div-check"><input type="checkbox" id="usability1" name="usability" class="view__check" value="bath">
+                                                                <label for="usability1" class="view__label">Ванна</label><input type="checkbox" id="usability2" name="usability" class="view__check" value="furniture">
+                                                                <label for="usability2" class="view__label">Мебель</label><input type="checkbox" id="usability3" name="usability" class="view__check" value="wifi">
+                                                                <label for="usability3" class="view__label">Wifi</label></div></div>
+                                                            <div class="div-condition"><div class=""><input type="checkbox" id="conditions1" name="conditions" class="view__check" value="not">
+                                                                <label for="conditions1" class="view__label">Неважно</label><input type="checkbox" id="conditions2" name="conditions" class="view__check" value="children">
+                                                                <label for="conditions2" class="view__label">С детьми</label><input type="checkbox" id="conditions3" name="conditions" class="view__check" value="animal">
+                                                                <label for="conditions3" class="view__label">С животными</label></div></div>
+                                                            <div class="div"><div class="div-text"><input type="text" class="view__smallbox" name="from_ceiling" placeholder="От"><input type="text" class="view__smallbox" name="to_ceiling" placeholder="До"></div></div>
+                                                            <div class="div"><div class="div-text"><input type="text" class="view__smallbox" name="from_year" placeholder="От"><input type="text" class="view__smallbox" name="to_year" placeholder="До"></div></div>
+                                                            <div class="special-div"><select name="type" class="view__box">
+                                                                <div class="drop-content">
+                                                                <option value="Любой">Любой</option>
+                                                                <option value="Панельный">Панельный</option>
+                                                                <option value="Кирпичный">Кирпичный</option>
+                                                                <option value="Монолитный">Монолитный</option>
+                                                                <option value="Деревяный">Деревяный</option>
+                                                                </div>
+                                                            </select></div>
+                                                            <div class="div-check"><input type="checkbox" id="trash" name="trash" class="view__check" value="present">
+                                                                <label for="trash" class="view__label">Присутствует</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-block">
+                                                    
+                                                    <a href="#" id='building-name'></a>
+                                                    <button type="button" class="welcome__button">Применить</button>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="overlay"></div>
+                            </div>
+                        </div>
+                        <div class="filter__input">
+                            <input type="text" class="filter__search" name="search" placeholder="Поиск объявлений">
+                            <button type="submit" class="filter__submit">Найти</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider">
+                <div class="container">
+                    {% if not search_text %}
+                        <div class="slider__title">Список найденных объявлений: {{ filtered_data|length }}</div>
+                    {% else %}
+                        <div class="slider__title">Список объявлений по результату «{{search_text}}»: {{ filtered_data|length }}</div>
+                    {% endif %}
+                    {% if filtered_data|length == 0 %}
+                        <div class="slider__empty">Список пуст</div>
+                    {% endif %}
+                    {% for annoucement in filtered_data %}
+                    
+                    <div class="slider__list">
+                        <a href="{% url 'annoucement_item' arg=annoucement.id %}">
+                        <div class="slider__item">
+                            <div class="slider__block">
+                                <div class="slider__photo">
+                                    <div class="image">
+                                        {% if annoucement.main_image %}
+                                            <img src="{{ annoucement.main_image.url }}" alt="" class="photo__image">
+                                        {% else %}
+                                            <img src="{% static '../static/estate/images/not_found.png' %}" alt="" class="photo__not-found">
+                                        {% endif %}
+                                    </div>
+                                    <div class="slider__small">
+                                        {% for picture in annoucement.pictures.all|slice:"1:4" %}
+                                            <img src="{{ picture.image.url }}" alt="" class="small__image">
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="slider__information">
+                                    <div class="slider__separate">
+                                        <div class="slider__label">
+                                            {{ annoucement.title }}
+                                        </div>
+                                        <div class="slider__date">
+                                            {{annoucement.get_date}}
+                                        </div>
+                                    </div>
+                                    <div class="slider__location slider__display_1">
+                                        {{ annoucement.address }}
+                                    </div>
+                                    <div class="slider__location slider__secret_1">
+                                        {{ annoucement.slice_address }}
+                                    </div>
+                                    <div class="slider__price">
+                                        {{ annoucement.price }} руб./мес.
+                                    </div>
+                                    <div class="slider__description slider__display_2">
+                                        {{ annoucement.description }}
+                                    </div>
+                                    <div class="slider__description slider__secret_2">
+                                        {{ annoucement.slice_description }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slider__description slider__bottom">
+                                {{ annoucement.slice_description }}
+                            </div>
+                            <div class="slider__check">
+                                <div class="slider__hidden">
+                                    <form action="{% url 'add_favorite_from_main' arg=annoucement.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <embed class="example" onclick="return true">
+                                        <button type="submit"><img src="{% static '../static/estate/images/like.png' %}" alt="" class="view__like"></button>
+                                        
+                                        </embed>
+                                    </form>
+                                    <div class="hidden__compilation">
+                                        {% csrf_token %}
+
+                                        <a type="button" class="hid" data-modal-target="#modal" data-name="{{ annoucement.id }}"  data-nametitle="Букет «Фруктовый Коктейль»" data-imgtovara="images/buket/2.jpg" data-pricetovar="1700 р." data-toggle="modal" data-target="#exampleModal">В подборку</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="slider__area" onclick="return false">
+                                    <div class="slider__hidden_phone" id="slider__phone_{{ annoucement }}">+ {{annoucement.phone}}</div>
+                                    <embed>
+                                        <button class="slider__phone" id="slider__show_{{ annoucement }}" onclick='ShowPhone("{{ annoucement }}")'>Телефон</button>
+                                    </embed>
+                                </div>
+                                <div class="slider__area">
+                                    <form action="{% url 'open_chat' arg=annoucement.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="slider__chat">Написать</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div></a>
+                    
+
+                    <div class="modal" id="modal">
+                        <div class="modal-header">
+                            <div class="title">Добавление в подборку</div>
+                            <button data-close-button class="close-button">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'add_in_compilation' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal-block">
+                                    <select name="compilation" required="required" class="view__select">
+                                        <div class="drop-content">
+                                        <h4 class="modal-title">{{name}}a</h4>
+                                        {% for compilation in compilations %}
+                                            <option value="{{compilation.id}}" name="drop_select">{{compilation.title}}</option>
+                                        {% endfor %}
+                                        </div>
+                                    </select>
+                                </div>
+                                <div class="modal-block">
+                                    <h4 class="modal-title" id="building-name"></h4>
+                                    <input id="hide1" name="best_field" type="hidden" value="">
+                                    
+                                    <button data-modal-target="#modal" class="welcome__button">Добавить</button>
+                                </div>
+                            </form>
+                         
+                        </div>
+                    </div>
+                    <div id="overlay"></div>
+                    
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+            <div class="footer">
+                <div class="container">
+                    <div class="footer__section">
+                        <div class="footer__logo">
+                            <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                            <span class="copyright">@ Объявление.ру</span>
+                        </div>
+                        <div class="footer__links">
+                            <a href="{% url 'contacts' %}" class="footer__href">Контакты</a>
+                            <a href="{% url 'about' %}" class="footer__href">О нас</a>
+                        </div>
+                        <div class="footer__networks">
+                            <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

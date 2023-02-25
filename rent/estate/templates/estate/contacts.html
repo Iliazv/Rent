@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contacts">
+                <div class="container">
+                    <div class="contacts__section">
+                        <div class="about__title">
+                            Контакты нашей компании
+                        </div>
+                        <div class="contacts__phone">
+                            <div class="contacts__image">
+                                <img src="{% static '../static/estate/images/phone.png' %}" alt="" class="contacts__icon">
+                            </div>
+                            <div class="contacts__label">
+                                Номер телефона: +7872342837
+                            </div>
+                            <div class="contacts__image">
+                                <img src="{% static '../static/estate/images/location.png' %}" alt="" class="contacts__icon">
+                            </div>
+                            <div class="contacts__label">
+                                Почтовый адрес: arendacompany@gmail.com
+                            </div>
+                        </div>
+
+                        <div class="contacts__address">
+                            <div class="contacts__header">
+                                Наши адреса:
+                            </div>
+                            <div class="contacts__flex">
+                                <div class="contacts__location contacts__location_1">
+                                    <li class="contacts__marker">г. Новосибирск, Октябрьский район, Калинина 36:</li>
+                                    <li class="contacts__marker">г. Новосибирск, Дзержинский район, Краевая 11а:</li>
+                                </div>
+                                <div class="contacts__location contacts__location_2">
+                                    <li class="contacts__marker">г. Новосибирск, Центральный район, Сахарова 176:</li>
+                                    <li class="contacts__marker">г. Новосибирск, Центральный район, Маршакова 9:</li>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="conctacts__map">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7541.5499890727915!2d82.97601933517394!3d55.0484037255147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x42dfef660f7b4073%3A0xc0d38ae90a053185!2z0J7QsdGJ0LXRgdGC0LLQviDQoSDQntCz0YDQsNC90LjRh9C10L3QvdC-0Lkg0J7RgtCy0LXRgtGB0YLQstC10L3QvdC-0YHRgtGM0Y4g0J_RgNC-0LXQutGC0L3QsNGPINCa0L7QvNC_0LDQvdC40Y8gItCT0YDQsNC00L7Qv9GA0L7QtdC60YIi!5e0!3m2!1sru!2sru!4v1671184401106!5m2!1sru!2sru" class="contacts__map-style" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="container">
+                    <div class="footer__section">
+                        <div class="footer__logo">
+                            <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                            <span class="copyright">@ Объявление.ру</span>
+                        </div>
+                        <div class="footer__links">
+                            <a href='{% url 'contacts' %}' class="footer__href">Контакты</a>
+                            <a href='{% url 'about' %}' class="footer__href">О нас</a>
+                        </div>
+                        <div class="footer__networks">
+                            <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

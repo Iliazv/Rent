@@ -1,0 +1,182 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" type = 'text/css' href="{% static 'estate/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'estate/images/favicon2.ico' %}" />
+    <title>RentMove</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+                <div class="container">
+                    <div class="header__row">
+                        <div class="header__logo">
+                            <a href="{% url 'main' %}"><img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon"></a>
+                        </div>
+                        <div class="header__references">
+                            <a href="{% url 'main' %}" class="header__link">Аренда</a>
+                            <a href="{% url 'flats' %}" class="header__link">Квартиры</a>
+                            <a href="{% url 'houses' %}" class="header__link">Дома</a>
+                            <a href="{% url 'rooms' %}" class="header__link header__link_hidden">Комнаты</a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'favorite' %}"><img src="{% static '../static/estate/images/heart.png' %}" alt="" class="header__favorite header__heart"></a>
+                        </div>
+                        <div class="header__button">
+                            <a href="{% url 'open_chat' %}"><img src="{% static '../static/estate/images/chat.png' %}" alt="" class="header__favorite header__chat"></a>
+                        </div>
+                        <div class="header__frame">
+                            <a href="{% url 'add_post' %}" class="header__box header__showed">Добавить объявление</a>
+                            <a href="{% url 'add_post' %}" class="header__box header__hidden">Добавить</a>
+                            {% if not request.user.is_authenticated %}
+                                <a href="{% url 'login' %}" class="header__box">Войти</a>
+                            {% else %}
+                                <a href="{% url 'account' %}" class="header__box">Кабинет</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view">
+                <div class="container">
+                    <div class="view__title">
+                        Добавить объявление:
+                    </div>
+                    <div class="view__warning_1">
+                        Все объявления проходят модерацию. Объявления от посредников удаляются, а аккаунты блокируются.
+                    </div>
+                    {% if warning != '' %}
+                        <div class="view__warning">
+                            {{ warning }}
+                        </div>
+                    {% endif %}
+                    <div class="view__contacts">
+                        Контактная информация
+                    </div>
+                    <form action="{% url 'adding' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="view__form">
+                            <div class="view__reference">
+                                <div class="view__specify">Номер телефона</div>
+                                <div class="view__specify">Почтовый адрес</div>
+                            </div>
+                            
+                            <div class="view__field">
+                                <div class="div"><input type="text" class="view__input" name="phone" required></div>
+                                <div class="div"><input type="text" class="view__input" name="email" required></div>
+                            </div>
+                        </div>
+                        <div class="view__contacts">
+                            Информация  о недвижимости
+                        </div>
+                        <div class="view__form">
+                            <div class="view__reference">
+                                <div class="view__specify">Категория</div>
+                                <div class="view__specify">Название</div>
+                                <div class="view__specify">Цена</div>
+                                <div class="view__specify">Адрес</div>
+                                <div class="view__specify">Площадь</div>
+                                <div class="view__specify">Этаж</div>
+                                <div class="view__specify-area">Описание</div>
+                            </div>
+                            
+                            <div class="view__field">
+                                <select name="category" required="required" class="view__input">
+                                    <div class="drop-content">
+                                    <option value="Квартира">Квартира</option>
+                                    <option value="Дом">Дом</option>
+                                    <option value="Комната">Комната</option>
+                                    <option value="Таунхаус">Таунхаус</option>
+                                    <option value="Часть дома">Часть дома</option>
+                                    </div>
+                                </select>
+                                <div class="div"><input type="text" class="view__input" name="title" required></div>
+                                <div class="div"><input type="text" class="view__input" name="price" required></div>
+                                <div class="div"><input type="text" class="view__input" name="address" required></div>
+                                <div class="div"><input type="text" class="view__input" name="area" required></div>
+                                <div class="div"><input type="text" class="view__input_small gap_1" name="ceil" required></div>
+                                <div class="view__absolute">Из <input type="text" class="view__input_small gap_2" name="ceilings" required></div>
+                                <div class="div"><textarea name="description" id="" class="view__area"></textarea></div>
+                            </div>
+                        </div>
+                        <div class="view__contacts">
+                            Информация  о постройке
+                        </div>
+                        <div class="view__form">
+                            <div class="view__reference">
+                                <div class="view__specify">Год постройки</div>
+                                <div class="view__specify">Тип дома</div>
+                                <div class="view__specify">Отопление</div>
+                            </div>
+                            
+                            <div class="view__field">
+                                <div class="div"><input type="text" class="view__input" name="building_year" required></div>
+                                <div class="div"><input type="text" class="view__input" name="type" required></div>
+                                <div class="div"><input type="text" class="view__input" name="heating" required></div>
+                            </div>
+                        </div>
+                        <div class="view__contacts">
+                            Изображения
+                        </div>
+                        <div class="view__addpost">
+                            <div class="view__submit">
+                                <input type="file" name="upload" id="upload" accept="image/*" class="view" multiple>
+                                <label for="upload">
+                                    <i class="material-icons">
+                                        add_photo_alternate
+                                    </i> &nbsp;
+                                    Добавить изображения
+                                </label>
+
+                            </div>
+                            <div class="view__warning_2">
+                                Допустимо загрузить 20 изображений формата .JPG общий вес не может превышать 100 МБ
+                            </div>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                            <div class="view__new">
+                                <button type="submit" class="view__submit-button">Добавить объявление</button>
+                            </div>
+                        {% else %}
+                            <div class="view__new">
+                                <button type="submit" class="view__submit-button_disable" disabled>Добавить объявление</button>
+                                <span class="view__authenticate"><a href="{% url 'login_warning_add' %}" class="view__enter">Зарегистрируйтесь</a>, чтобы добавлять объявления</span>
+                            </div>
+                            
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="container">
+                    <div class="footer__section">
+                        <div class="footer__logo">
+                            <img src="{% static '../static/estate/images/logo.png' %}" alt="" class="header__icon">
+                            <span class="copyright">@ Объявление.ру</span>
+                        </div>
+                        <div class="footer__links">
+                            <a href="{% url 'contacts' %}" class="footer__href">Контакты</a>
+                            <a href="{% url 'about' %}" class="footer__href">О нас</a>
+                        </div>
+                        <div class="footer__networks">
+                            <a href="https://www.facebook.com/"><img src="{% static '../static/estate/images/facebook.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://www.instagram.com/"><img src="{% static '../static/estate/images/instagram.png' %}" alt="" class="footer__network"></a>
+                            <a href="https://web.telegram.org/z/"><img src="{% static '../static/estate/images/telegram.png' %}" alt="" class="footer__network"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
